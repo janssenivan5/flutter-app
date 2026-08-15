@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'checkout_screen.dart'; // 1. TAMBAHKAN IMPORT INI
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,6 +14,7 @@ class DetailScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch, // 2. TAMBAHAN agar tombol sejajar penuh
         children: [
           Image.asset(
             'assets/images/surprise_bag.jpg',
@@ -45,6 +48,33 @@ class DetailScreen extends StatelessWidget {
             child: Text(
               'Isi tas ini adalah kejutan dari chef kami berdasarkan hidangan prasmanan terbaik hari ini. Dijamin segar dan berkualitas tinggi.',
               style: TextStyle(fontSize: 16),
+            ),
+          ),
+          
+          const Spacer(), // 3. TAMBAHAN untuk mendorong tombol menempel ke bawah layar
+          
+          // 4. TAMBAHAN TOMBOL NAVIGASI MENUJU CHECKOUT
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD4AF37), // Warna emas LuxeBite
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                // Aksi saat tombol ditekan
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CheckoutScreen()),
+                );
+              },
+              child: const Text(
+                'Lanjut ke Pembayaran',
+                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
