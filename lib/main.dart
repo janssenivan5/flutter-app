@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'main_dashboard.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -7,16 +7,15 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'LuxeBite',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, 
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const HomeScreen(), // Mengarahkan aplikasi ke Screen 1
+      home: const MainDashboard(), 
     );
   }
 }

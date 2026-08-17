@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'checkout_screen.dart'; // 1. TAMBAHKAN IMPORT INI
+import 'checkout_screen.dart'; 
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +13,7 @@ class DetailScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch, // 2. TAMBAHAN agar tombol sejajar penuh
+        crossAxisAlignment: CrossAxisAlignment.stretch, 
         children: [
           Image.asset(
             'assets/images/surprise_bag.jpg',
@@ -51,9 +50,8 @@ class DetailScreen extends StatelessWidget {
             ),
           ),
           
-          const Spacer(), // 3. TAMBAHAN untuk mendorong tombol menempel ke bawah layar
+          const Spacer(), 
           
-          // 4. TAMBAHAN TOMBOL NAVIGASI MENUJU CHECKOUT
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton(
@@ -65,7 +63,6 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Aksi saat tombol ditekan
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const CheckoutScreen()),
