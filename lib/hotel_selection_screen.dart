@@ -108,7 +108,6 @@ class _HotelSelectionScreenState extends State<HotelSelectionScreen> {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: isAvailable ? () {
-          // Melempar ke HomeScreen saat hotel diklik
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const HomeScreen()),

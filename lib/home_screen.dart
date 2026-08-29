@@ -6,7 +6,7 @@ import 'detail_screen.dart';
 import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  final bool isAdminMode; // Parameter pembeda mode
+  final bool isAdminMode; 
   const HomeScreen({super.key, this.isAdminMode = false});
 
   @override
@@ -230,7 +230,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        // Logika dinamis: Jika admin, tampilkan sapaan. Jika tidak, tampilkan "Daftar Menu"
         title: widget.isAdminMode 
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
           : const Text('Daftar Menu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        automaticallyImplyLeading: !widget.isAdminMode, // Hilangkan tombol back jika admin
+        automaticallyImplyLeading: !widget.isAdminMode, 
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
