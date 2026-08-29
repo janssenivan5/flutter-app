@@ -11,7 +11,6 @@ class PembayaranScreen extends StatelessWidget {
         title: const Text('Metode Pembayaran', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        // Gradasi disamakan dengan HomeScreen dan AktivitasScreen
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'home_screen.dart'; 
+import 'hotel_selection_screen.dart'; 
+import 'home_screen.dart'; // Import HomeScreen untuk rute admin
 import 'aktivitas_screen.dart'; 
 import 'pembayaran_screen.dart'; 
 
@@ -42,7 +43,7 @@ class _MainDashboardState extends State<MainDashboard> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _setupNavigation(); // Default ke customer jika error
+          _setupNavigation(); 
           _isLoading = false;
         });
       }
@@ -51,9 +52,8 @@ class _MainDashboardState extends State<MainDashboard> {
 
   void _setupNavigation() {
     if (_roleUser == 'admin') {
-      // Tampilan khusus Admin (Bayar dihilangkan)
       _pages = [
-        const HomeScreen(), 
+        const HomeScreen(isAdminMode: true), // Admin langsung masuk ke Home Screen Mode Admin
         const AktivitasScreen(), 
       ];
       _navItems = const [
@@ -61,9 +61,8 @@ class _MainDashboardState extends State<MainDashboard> {
         BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Aktivitas'),
       ];
     } else {
-      // Tampilan Customer (Lengkap)
       _pages = [
-        const HomeScreen(), 
+        const HotelSelectionScreen(), // Customer masuk ke Hotel Selection
         const AktivitasScreen(), 
         const PembayaranScreen(), 
       ];
@@ -83,7 +82,6 @@ class _MainDashboardState extends State<MainDashboard> {
       );
     }
 
-    // Mencegah error jika state index lebih besar dari jumlah tab (kasus langka saat switch akun)
     if (_selectedIndex >= _pages.length) {
       _selectedIndex = 0;
     }

@@ -6,8 +6,8 @@ class PaymentProcessScreen extends StatefulWidget {
   final String paymentMethod;
   final int totalAmount;
   final String menuName; 
-  final Map<String, dynamic> menuData; // Tambahan untuk menarik ID makanan
-  final int quantity; // Tambahan untuk tahu jumlah yang dibeli
+  final Map<String, dynamic> menuData; 
+  final int quantity;
 
   const PaymentProcessScreen({
     super.key,
@@ -71,18 +71,15 @@ class _PaymentProcessScreenState extends State<PaymentProcessScreen> {
                 try {
                   final int menuId = widget.menuData['id'];
 
-                  // 1. Cek stok terakhir
                   final cekData = await supabase.from('menus').select('stok').eq('id', menuId).single();
                   final int stokRealTime = cekData['stok'] ?? 0;
 
                   if (stokRealTime >= widget.quantity) {
-                    // 2. Potong stok HANYA saat tombol ini ditekan
                     await supabase
                         .from('menus')
                         .update({'stok': stokRealTime - widget.quantity})
                         .eq('id', menuId);
 
-                    // 3. Catat riwayat pesanan HANYA saat tombol ini ditekan
                     final userId = supabase.auth.currentUser!.id;
                     await supabase.from('riwayat_pesanan').insert({
                       'user_id': userId,
@@ -91,7 +88,6 @@ class _PaymentProcessScreenState extends State<PaymentProcessScreen> {
                       'metode_pembayaran': widget.paymentMethod,
                     });
 
-                    // 4. Lanjut ke layar tiket
                     if (mounted) {
                       Navigator.pushReplacement(
                         context,

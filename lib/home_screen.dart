@@ -6,7 +6,8 @@ import 'detail_screen.dart';
 import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isAdminMode; // Parameter pembeda mode
+  const HomeScreen({super.key, this.isAdminMode = false});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,8 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final supabase = Supabase.instance.client;
 
   List<Map<String, dynamic>> _menus = [];
-  String _namaUser = 'Memuat...';
   String _roleUser = 'customer';
+  String _namaUser = 'Memuat...';
   bool _isLoading = true;
 
   @override
@@ -34,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final menuData = await supabase.from('menus').select();
 
       setState(() {
-        _namaUser = userData['nama_lengkap'] ?? 'User';
         _roleUser = userData['role'] ?? 'customer';
+        _namaUser = userData['nama_lengkap'] ?? 'Admin';
         _menus = List<Map<String, dynamic>>.from(menuData);
       });
     } catch (e) {
@@ -229,8 +230,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
+        // Logika dinamis: Jika admin, tampilkan sapaan. Jika tidak, tampilkan "Daftar Menu"
+        title: widget.isAdminMode 
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Halo, $_namaUser!', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                const Text('Siap mengelola makanan hari ini?', style: TextStyle(fontSize: 12, color: Colors.white70)),
+              ],
+            )
+          : const Text('Daftar Menu', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: !widget.isAdminMode, // Hilangkan tombol back jika admin
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -240,27 +252,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Halo, $_namaUser!', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-            const Text('Siap menyelamatkan makanan hari ini?', style: TextStyle(fontSize: 12, color: Colors.white70)),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
-              },
-              child: const CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Color(0xFFD4AF37)),
+        actions: widget.isAdminMode
+          ? [
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                  },
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: Color(0xFFD4AF37)),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ]
+          : null,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

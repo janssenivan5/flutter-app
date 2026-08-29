@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; // Import Supabase
+import 'package:supabase_flutter/supabase_flutter.dart'; 
 import 'main_dashboard.dart'; 
 import 'signup_screen.dart';
 
@@ -11,18 +11,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Mengubah dari _usernameController menjadi _emailController
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   
   bool _obscurePassword = true;
-  bool _isLoading = false; // State untuk animasi loading
+  bool _isLoading = false; 
 
   final supabase = Supabase.instance.client;
 
-  // FUNGSI SAKTI UNTUK LOGIN
   Future<void> _loginUser() async {
-    // Validasi sederhana jika kosong
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email dan password tidak boleh kosong!'), backgroundColor: Colors.red),
@@ -31,17 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() {
-      _isLoading = true; // Nyalakan loading
+      _isLoading = true; 
     });
 
     try {
-      // Mengirim permintaan login ke server Supabase
       await supabase.auth.signInWithPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
 
-      // Jika berhasil melewati baris di atas tanpa error, pindah ke Home
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -49,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } on AuthException catch (e) {
-      // Menangkap error dari Supabase (misal: password salah, email tidak terdaftar)
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal Masuk: ${e.message}'), backgroundColor: Colors.red),
@@ -64,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } finally {
       if (mounted) {
         setState(() {
-          _isLoading = false; // Matikan loading
+          _isLoading = false; 
         });
       }
     }
@@ -81,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 40),
-              // Logo atau Header
               const Icon(Icons.shopping_bag, size: 80, color: Color(0xFF064E3B)),
               const SizedBox(height: 16),
               const Text(
@@ -95,15 +88,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 48),
 
-              // Form Email (Tadinya Username)
               const Text('Email', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: _emailController,
-                keyboardType: TextInputType.emailAddress, // Memunculkan keyboard ber-@
+                keyboardType: TextInputType.emailAddress, 
                 decoration: InputDecoration(
                   hintText: 'Masukkan email Anda',
-                  prefixIcon: const Icon(Icons.email_outlined), // Ubah ikon
+                  prefixIcon: const Icon(Icons.email_outlined), 
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -113,7 +105,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Form Password
               const Text('Password', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
@@ -139,7 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Tombol Login Dinamis
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -148,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  onPressed: _isLoading ? null : _loginUser, // Cegah klik ganda saat loading
+                  onPressed: _isLoading ? null : _loginUser, 
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
@@ -160,7 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Navigasi ke Sign Up
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

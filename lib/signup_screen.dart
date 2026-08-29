@@ -18,7 +18,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   
-  // Controller baru untuk Kode Rahasia
   final TextEditingController _secretCodeController = TextEditingController();
 
   bool _obscurePassword = true;
@@ -40,13 +39,11 @@ class _SignupScreenState extends State<SignupScreen> {
         final User? user = res.user;
 
         if (user != null) {
-          // LOGIKA KEAMANAN: Cek apakah kode rahasianya benar
           String finalRole = 'customer';
           if (_secretCodeController.text.trim() == 'LUXE2026') {
             finalRole = 'admin';
           }
 
-          // Simpan data beserta role yang sudah tervalidasi
           await supabase.from('users').insert({
             'id': user.id, 
             'nama_lengkap': _nameController.text.trim(),
@@ -172,12 +169,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // FITUR BARU: Kolom Kode Rahasia Admin (Opsional)
                 _buildLabel('Kode Registrasi Pegawai (Opsional)'),
                 TextFormField(
                   controller: _secretCodeController,
                   decoration: _inputStyle('Hanya diisi oleh staf restoran'),
-                  // Tidak ada validator wajib, karena ini opsional untuk customer biasa
                 ),
                 const SizedBox(height: 32),
 

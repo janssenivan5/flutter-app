@@ -34,8 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         
         setState(() {
           _nameController.text = userData['nama_lengkap'] ?? '';
-          _usernameController.text = userData['username'] ?? ''; // Menampilkan Username
-          // Mengakomodasi kemungkinan dua nama kolom di database
+          _usernameController.text = userData['username'] ?? ''; 
           _phoneController.text = userData['nomor_telepon'] ?? userData['no_telepon'] ?? '';
           _emailController.text = user.email ?? ''; 
         });
@@ -55,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       
       await supabase.from('users').update({
         'nama_lengkap': _nameController.text,
-        // Ganti 'nomor_telepon' dengan 'no_telepon' jika error saat menyimpan
         'nomor_telepon': _phoneController.text, 
       }).eq('id', userId);
 
@@ -89,7 +87,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text('Profil Saya', style: TextStyle(color: Colors.white)),
         elevation: 0,
-        // GRADASI KONSISTEN DENGAN HOME DAN DETAIL
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -104,7 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator(color: Color(0xFF064E3B)))
         : Center(
-            // Membatasi lebar form agar rapi di layar Web/Laptop
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 700),
               child: SingleChildScrollView(
@@ -121,7 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildTextField('Nama Lengkap', _nameController, Icons.person_outline),
                     const SizedBox(height: 16),
                     
-                    // Username dari rubrik Sign Up
                     _buildTextField('Username', _usernameController, Icons.account_circle_outlined, isReadOnly: true),
                     const SizedBox(height: 16),
                     
@@ -177,7 +172,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         TextField(
           controller: controller,
           readOnly: isReadOnly,
-          // Mengaktifkan keyboard angka untuk kolom telepon
           keyboardType: isNumber ? TextInputType.phone : TextInputType.text,
           style: TextStyle(color: isReadOnly ? Colors.grey : Colors.black),
           decoration: InputDecoration(

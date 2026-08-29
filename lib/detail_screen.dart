@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart'; 
 import 'checkout_screen.dart';
 
-// PENERAPAN OOP: Class Model untuk Menu 
 class Menu {
   int id;
   String namaMakanan;
@@ -58,7 +57,7 @@ class _DetailScreenState extends State<DetailScreen> {
   final supabase = Supabase.instance.client;
   late Menu _menu; 
   late TextEditingController _quickStockCtrl; 
-  int _quantity = 1; // KUNCI UTAMA: Menyimpan jumlah pesanan
+  int _quantity = 1; 
 
   @override
   void initState() {
@@ -236,7 +235,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Pastikan _quantity tidak melebihi stok jika stok tiba-tiba berubah
     if (_quantity > _menu.stok && _menu.stok > 0) {
       _quantity = _menu.stok;
     }
@@ -353,13 +351,11 @@ class _DetailScreenState extends State<DetailScreen> {
                     
                     const SizedBox(height: 8), 
                     
-                    // TAMPILAN KHUSUS CUSTOMER (Pemilihan Jumlah & Tombol Beli)
                     if (widget.role != 'admin')
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                         child: Column(
                           children: [
-                            // === TOMBOL PLUS MINUS JUMLAH PESANAN ===
                             if (_menu.stok > 0)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 24.0),
@@ -398,7 +394,6 @@ class _DetailScreenState extends State<DetailScreen> {
                                 ),
                               ),
                             
-                            // === TOMBOL LANJUT PEMBAYARAN ===
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
@@ -416,13 +411,13 @@ class _DetailScreenState extends State<DetailScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => CheckoutScreen(
                                             menuData: _menu.toJson(),
-                                            quantity: _quantity, // MENGIRIM JUMLAH KE CHECKOUT
+                                            quantity: _quantity, 
                                             onPaymentSuccess: () {
                                               if (mounted) {
                                                 setState(() {
                                                   if (_menu.stok >= _quantity) {
-                                                    _menu.stok -= _quantity; // Potong sesuai kuantitas
-                                                    _quantity = 1; // Reset jumlah ke 1 kembali
+                                                    _menu.stok -= _quantity; 
+                                                    _quantity = 1; 
                                                   }
                                                 });
                                               }
@@ -442,7 +437,6 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ),
 
-                    // TAMPILAN KHUSUS ADMIN (Stepper Update Stok Cepat)
                     if (widget.role == 'admin')
                       Padding(
                         padding: const EdgeInsets.all(24.0),
