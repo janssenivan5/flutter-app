@@ -1,23 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'home_screen.dart'; 
+import 'aktivitas_screen.dart'; 
+import 'pembayaran_screen.dart'; 
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({super.key});
+  
   @override
   State<MainDashboard> createState() => _MainDashboardState();
 }
 
 class _MainDashboardState extends State<MainDashboard> {
   int _selectedIndex = 0;
+  final supabase = Supabase.instance.client;
+  
+  bool _isLoading = true;
+  String _roleUser = 'customer';
+  
+  List<Widget> _pages = [];
+  List<BottomNavigationBarItem> _navItems = [];
 
-  final List<Widget> _pages = [
-    const HomeScreen(), 
-    _buildDummyPage('Aktivitas', 'Pantau status penjemputan & riwayat pesanan'), 
-    _buildDummyPage('Pembayaran', 'Kelola E-Wallet & riwayat transaksi'), 
-    _buildDummyPage('Profil', 'Pengaturan akun & preferensi'), 
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchRole();
+  }
+
+  Future<void> _fetchRole() async {
+    try {
+      final userId = supabase.auth.currentUser!.id;
+      final userData = await supabase.from('users').select('role').eq('id', userId).single();
+      
+      if (mounted) {
+        setState(() {
+          _roleUser = userData['role'] ?? 'customer';
+          _setupNavigation();
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _setupNavigation(); // Default ke customer jika error
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _setupNavigation() {
+    if (_roleUser == 'admin') {
+      // Tampilan khusus Admin (Bayar dihilangkan)
+      _pages = [
+        const HomeScreen(), 
+        const AktivitasScreen(), 
+      ];
+      _navItems = const [
+        BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Telusuri'),
+        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Aktivitas'),
+      ];
+    } else {
+      // Tampilan Customer (Lengkap)
+      _pages = [
+        const HomeScreen(), 
+        const AktivitasScreen(), 
+        const PembayaranScreen(), 
+      ];
+      _navItems = const [
+        BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Telusuri'),
+        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Aktivitas'),
+        BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Bayar'),
+      ];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Color(0xFF064E3B))),
+      );
+    }
+
+    // Mencegah error jika state index lebih besar dari jumlah tab (kasus langka saat switch akun)
+    if (_selectedIndex >= _pages.length) {
+      _selectedIndex = 0;
+    }
+
     return Scaffold(
       body: _pages[_selectedIndex], 
       bottomNavigationBar: Container(
@@ -37,33 +107,7 @@ class _MainDashboardState extends State<MainDashboard> {
               _selectedIndex = index; 
             });
           },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Telusuri'),
-            BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Aktivitas'),
-            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Bayar'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-          ],
-        ),
-      ),
-    );
-  }
-  static Widget _buildDummyPage(String title, String description) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF064E3B),
-        automaticallyImplyLeading: false, 
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.construction, size: 80, color: Colors.grey.shade300),
-            const SizedBox(height: 16),
-            Text('Halaman $title', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text(description, style: const TextStyle(color: Colors.grey)),
-          ],
+          items: _navItems,
         ),
       ),
     );
